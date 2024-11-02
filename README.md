@@ -15,3 +15,14 @@ Em seu SGDB após realizar todos os passos da instrução de uso, realize a cone
 `USER:` *wgb-code*
 `PASSWORD:` *abc1234*
 `DATABASE:` *polls*
+
+# Criação da tabela do banco de dados com migrates:
+
+Será necessário alterar o nome do arquivo `.env-example` para apenas `.env`
+
+Após isto, será necessário rodar o seguinte comando no terminal:
+
+```
+npx prisma migrate dev --name create_enterprise
+```
+
