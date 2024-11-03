@@ -10,7 +10,7 @@ export const CreateEnterprise = async (app: FastifyInstance) => {
     app.post('/register', async (req: FastifyRequest<{ Body: CreateEnterpriseInterface }>, rep: FastifyReply) => {
         
         let validation = dataValidationsSchema.safeParse(req.body)
-        
+
         if (!validation.success) {
             let errorMessage = validation.error.errors[0].message
 
@@ -46,6 +46,8 @@ export const CreateEnterprise = async (app: FastifyInstance) => {
         }
 
         let createEnterprise = await CreateEnterpriseModel(data)
+
+        console.log(createEnterprise)
 
         if (!createEnterprise) {
             return rep.status(500).send({

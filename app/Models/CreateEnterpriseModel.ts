@@ -4,6 +4,8 @@ import { CreateEnterpriseInterface } from '../Interfaces/CreateEnterprise-Interf
 const prisma = new PrismaClient()
 
 export async function CreateEnterpriseModel(data: CreateEnterpriseInterface) {
+    console.log(data)
+    
     try {
         let createdEnterprise = await prisma.enterprise.create({
             data: data
