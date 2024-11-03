@@ -12,3 +12,6 @@ CREATE TABLE "Enterprise" (
 
     CONSTRAINT "Enterprise_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Enterprise_email_key" ON "Enterprise"("email");

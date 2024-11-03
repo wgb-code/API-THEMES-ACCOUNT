@@ -3,6 +3,7 @@ import { CreateEnterpriseInterface } from '../../Interfaces/CreateEnterprise-Int
 import { CreateEnterpriseModel } from '../../Models/CreateEnterpriseModel';
 import { validateColor } from '../../Helpers/ColorsHelper';
 import { dataValidationsSchema } from '../../Helpers/RegisterValidation';
+import { secureHash } from '../../Helpers/HashHelper';
 
 export const CreateEnterprise = async (app: FastifyInstance) => {
 
@@ -24,38 +25,19 @@ export const CreateEnterprise = async (app: FastifyInstance) => {
         let highlightsbg    = validateColor(String(req.body.highlightsbg))
         let highlightscolor = validateColor(String(req.body.highlightscolor))
     
-        if (!generalbg) {
+        if ((!generalbg) || (!generalcolor) || (!highlightsbg) || (!highlightscolor)) {
             return rep.status(400).send({
-                message: "The 'generalbg' field must be a valid hex color.",
+                message: 'All color fields must be valid hex colors.',
                 statuscode: 400
-            })
+            });
         }
-    
-        if (!generalcolor) {
-            return rep.status(400).send({
-                message: "The 'generalcolor' field must be a valid hex color.",
-                statuscode: 400
-            })
-        }
-    
-        if (!highlightsbg) {
-            return rep.status(400).send({
-                message: "The 'highlightsbg' field must be a valid hex color.",
-                statuscode: 400
-            })
-        }
-    
-        if (!highlightscolor) {
-            return rep.status(400).send({
-                message: "The 'highlightscolor' field must be a valid hex color.",
-                statuscode: 400
-            })
-        }
+
+        let hashedPassword = await secureHash(req.body.password)
     
         let data: CreateEnterpriseInterface = {
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password,
+            password: hashedPassword,
             address: req.body.address,
             generalbg: generalbg || '#D6DEE7',
             generalcolor: generalcolor || '#0C121C',
