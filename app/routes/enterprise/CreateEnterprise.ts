@@ -2,53 +2,23 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { CreateEnterpriseInterface } from '../../Interfaces/CreateEnterprise-Interface';
 import { CreateEnterpriseModel } from '../../Models/CreateEnterpriseModel';
 import { validateColor } from '../../Helpers/ColorsHelper';
+import { dataValidationsSchema } from '../../Helpers/RegisterValidation';
 
 export const CreateEnterprise = async (app: FastifyInstance) => {
 
     app.post('/register', async (req: FastifyRequest<{ Body: CreateEnterpriseInterface }>, rep: FastifyReply) => {
-
-        if (!req.body.name) {
-            return rep.status(400).send({
-                message: "The 'name' field is mandatory",
-                statuscode: 400
-            })
-        }
-    
-        if (typeof req.body.name !== 'string') {
-            return rep.status(400).send({
-                message: "The 'name' field must be text type",
-                statuscode: 400
-            })
-        }
-
-        if (!req.body.password) {
-            return rep.status(400).send({
-                message: "The 'password' field is mandatory",
-                statuscode: 400
-            })
-        }
         
-        if (!req.body.email) {
-            return rep.status(400).send({
-                message: "The 'email' field is mandatory",
-                statuscode: 400
-            })
-        }
+        let validation = dataValidationsSchema.safeParse(req.body)
+        
+        if (!validation.success) {
+            let errorMessage = validation.error.errors[0].message
 
-        if (!req.body.address) {
             return rep.status(400).send({
-                message: "The 'address' field is mandatory",
+                message: errorMessage,
                 statuscode: 400
             })
-        }
+        } 
 
-        if (typeof req.body.address !== 'string') {
-            return rep.status(400).send({
-                message: "The 'address' field must be text type",
-                statuscode: 400
-            })
-        }
-    
         let generalbg       = validateColor(String(req.body.generalbg))
         let generalcolor    = validateColor(String(req.body.generalcolor))
         let highlightsbg    = validateColor(String(req.body.highlightsbg))
