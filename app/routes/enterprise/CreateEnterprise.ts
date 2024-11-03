@@ -47,8 +47,6 @@ export const CreateEnterprise = async (app: FastifyInstance) => {
 
         let createEnterprise = await CreateEnterpriseModel(data)
 
-        console.log(createEnterprise)
-
         if (!createEnterprise) {
             return rep.status(500).send({
                 message: 'There was a problem when creating the enterprise',

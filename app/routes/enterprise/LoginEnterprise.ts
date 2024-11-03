@@ -1,11 +1,13 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import { CreateEnterpriseInterface } from '../../Interfaces/CreateEnterprise-Interface'
-import { dataValidationsSchema } from '../../Helpers/RegisterValidation';
+import { LoginEnterpriseInterface } from '../../Interfaces/LoginEnterprise-Interface'
+import { LoginEnterpriseModel } from '../../Models/LoginEnterpriseModel';
+import { loginDataValidation } from '../../Helpers/LoginValidation';
+import { compareSecureHash } from '../../Helpers/HashHelper';
 
 export const LoginEnterprise = async (app: FastifyInstance) => {
     
-    app.post('/login', async (req: FastifyRequest<{ Body: CreateEnterpriseInterface }>, rep: FastifyReply) => {
-        let validation = dataValidationsSchema.safeParse(req.body)
+    app.post('/login', async (req: FastifyRequest<{ Body: LoginEnterpriseInterface }>, rep: FastifyReply) => {
+        let validation = loginDataValidation.safeParse(req.body)
 
         if (!validation.success) {
             let errorMessage = validation.error.errors[0].message
@@ -16,7 +18,34 @@ export const LoginEnterprise = async (app: FastifyInstance) => {
             })
         }
 
-        
+        let data: LoginEnterpriseInterface  = {
+            email: req.body.email,
+            password: req.body.password
+        }
 
+        const getUserData = await LoginEnterpriseModel(data)
+
+        if (!getUserData) {
+            return rep.status(404).send({
+                message: 'Email provided is invalid',
+                statuscode: 404
+            })
+        }
+
+        const comparePassword = await compareSecureHash(req.body.password, getUserData.password);
+
+        if (!comparePassword) {
+            return rep.status(401).send({
+                message: 'Password provided is invalid',
+                statuscode: 401
+            });
+        } 
+
+        return rep.status(200).send({
+            message: {
+                enterprise: getUserData
+            },
+            statuscode: 200
+        });
     })
 }
