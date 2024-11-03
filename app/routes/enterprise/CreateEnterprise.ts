@@ -27,6 +27,13 @@ export const CreateEnterprise = async (app: FastifyInstance) => {
                 statuscode: 400
             })
         }
+        
+        if (!req.body.email) {
+            return rep.status(400).send({
+                message: "The 'email' field is mandatory",
+                statuscode: 400
+            })
+        }
 
         if (!req.body.address) {
             return rep.status(400).send({
@@ -77,6 +84,7 @@ export const CreateEnterprise = async (app: FastifyInstance) => {
     
         let data: CreateEnterpriseInterface = {
             name: req.body.name,
+            email: req.body.email,
             password: req.body.password,
             address: req.body.address,
             generalbg: generalbg || '#D6DEE7',
