@@ -20,6 +20,27 @@ export const CreateEnterprise = async (app: FastifyInstance) => {
                 statuscode: 400
             })
         }
+
+        if (!req.body.password) {
+            return rep.status(400).send({
+                message: "The 'password' field is mandatory",
+                statuscode: 400
+            })
+        }
+
+        if (!req.body.address) {
+            return rep.status(400).send({
+                message: "The 'address' field is mandatory",
+                statuscode: 400
+            })
+        }
+
+        if (typeof req.body.address !== 'string') {
+            return rep.status(400).send({
+                message: "The 'address' field must be text type",
+                statuscode: 400
+            })
+        }
     
         let generalbg       = validateColor(String(req.body.generalbg))
         let generalcolor    = validateColor(String(req.body.generalcolor))
@@ -56,6 +77,8 @@ export const CreateEnterprise = async (app: FastifyInstance) => {
     
         let data: CreateEnterpriseInterface = {
             name: req.body.name,
+            password: req.body.password,
+            address: req.body.address,
             generalbg: generalbg || '#D6DEE7',
             generalcolor: generalcolor || '#0C121C',
             highlightsbg: highlightsbg || '#0C121C',

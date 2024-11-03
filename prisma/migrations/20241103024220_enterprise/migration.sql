@@ -1,7 +1,9 @@
 -- CreateTable
 CREATE TABLE "Enterprise" (
     "id" SERIAL NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
     "generalbg" TEXT,
     "generalcolor" TEXT,
     "highlightsbg" TEXT,
