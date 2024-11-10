@@ -14,6 +14,7 @@ export const LoginEnterprise = async (app: FastifyInstance) => {
 
             return rep.status(400).send({
                 message: errorMessage,
+                errorCode: 'ERROR_EMAIL',
                 statutscode: 400
             })
         }
@@ -28,6 +29,7 @@ export const LoginEnterprise = async (app: FastifyInstance) => {
         if (!getUserData) {
             return rep.status(404).send({
                 message: 'Email provided is invalid',
+                errorCode: 'ERROR_INVALID_EMAIL',
                 statuscode: 404
             })
         }
@@ -37,6 +39,7 @@ export const LoginEnterprise = async (app: FastifyInstance) => {
         if (!comparePassword) {
             return rep.status(401).send({
                 message: 'Password provided is invalid',
+                errorCode: 'ERROR_INVALID_PASSWORD',
                 statuscode: 401
             });
         } 
